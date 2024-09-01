@@ -1,0 +1,54 @@
+.select {
+  margin: 20px auto;
+  display: inline-block;
+  .title {
+    margin-bottom: 6px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .input-body {
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    display: flex;
+    padding: 12px 14px;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .icon {
+      margin-right: 8px;
+      height: 20px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .tags {
+      display: flex;
+    }
+    .input-wrapper {
+      width: 100%;
+      input {
+        width: 100%;
+        border: none;
+        outline: none;
+      }
+    }
+    .show-icon {
+      margin-left: 8px;
+      width: 20px;
+      height: 20px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .description {
+    color: #475467;
+  }
+  .options-list {
+    font-size: 14px;
+    .option-item {
+    }
+  }
+}

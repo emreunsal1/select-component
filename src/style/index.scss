@@ -1,0 +1,23 @@
+$text-primary: #101828;
+$text-secondary: #344054;
+$text-placeHolder: #667085;
+$bg-primary: #ffffff;
+$text-teriary: #475467;
+$border-brand: #d6bbfb;
+$border-primary: #d0d5dd;
+$fg-brand: #7f56d9;
+$fg-quanry: #98a2b3;
+
+@import "./components/selectInput.scss";
+@import "./components/tag.scss";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
