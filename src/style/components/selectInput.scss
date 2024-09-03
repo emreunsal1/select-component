@@ -1,54 +1,79 @@
 .select {
   margin: 20px auto;
-  display: inline-block;
   .title {
     margin-bottom: 6px;
     font-size: 14px;
     line-height: 20px;
   }
   .input-body {
-    border: 1px solid #d0d5dd;
-    border-radius: 8px;
-    display: flex;
-    padding: 12px 14px;
-    align-items: center;
-    margin-bottom: 8px;
-
-    .icon {
-      margin-right: 8px;
-      height: 20px;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .tags {
+    position: relative;
+    .input-container {
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      padding: 12px 14px;
+      align-items: center;
+      margin-bottom: 8px;
       display: flex;
-    }
-    .input-wrapper {
-      width: 100%;
-      input {
-        width: 100%;
-        border: none;
-        outline: none;
+      position: relative;
+      z-index: 3;
+
+      &.active {
+        border: 1px solid $border-brand;
+        box-shadow: 0px 0px 2px 1px #9e77ed;
       }
-    }
-    .show-icon {
-      margin-left: 8px;
-      width: 20px;
-      height: 20px;
-      img {
-        width: 100%;
-        height: 100%;
+
+      .icon {
+        margin-right: 8px;
+        height: 20px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        flex-grow: 1;
+      }
+      .input-wrapper {
+        min-width: 100px;
+        flex-grow: 1;
+        input {
+          width: 100%;
+          border: none;
+          outline: none;
+        }
+        .single-input-wrapper {
+          input {
+            &::placeholder {
+              color: $text-primary;
+            }
+            &:focus {
+              &::placeholder {
+                color: $text-placeHolder;
+              }
+            }
+          }
+        }
+      }
+      .tags:empty + .input-wrapper {
+        flex-grow: 1;
+      }
+      .tags:not(:empty) + .input-wrapper {
+        flex-shrink: 1;
+      }
+      .show-icon {
+        margin-left: 8px;
+        width: 20px;
+        height: 20px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }
   .description {
     color: #475467;
-  }
-  .options-list {
-    font-size: 14px;
-    .option-item {
-    }
   }
 }
