@@ -1,6 +1,6 @@
 import React from "react";
 import CheckIcon from "../assets/check.svg";
-import { SelectInputOption } from "../types";
+import { SelectInputOption, SelectInputProps } from "../types";
 
 interface Option extends SelectInputOption {
   isActive?: boolean;
@@ -10,6 +10,7 @@ interface OptionsListProps {
   options: Option[];
   isVisible: boolean;
   value: Option | Option[];
+  optionRender: SelectInputProps["optionRender"];
   onItemClickHandler: (option: Option) => void;
 }
 
@@ -17,6 +18,7 @@ const OptionsList: React.FC<OptionsListProps> = ({
   options,
   isVisible,
   value,
+  optionRender: OptionRender,
   onItemClickHandler,
 }) => {
   if (!isVisible) {
@@ -26,6 +28,24 @@ const OptionsList: React.FC<OptionsListProps> = ({
   const itemClickHandler = (option: Option) => {
     onItemClickHandler(option);
   };
+
+  if (OptionRender) {
+    return (
+      <div className="options-list">
+        {options.map((option) => (
+          <div
+            className="option-list-custom-item"
+            onClick={() => onItemClickHandler(option)}
+          >
+            <OptionRender
+              label={option.label}
+              value={option.value}
+            ></OptionRender>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="options-list">
@@ -54,7 +74,6 @@ const OptionListItem = ({
     if (Array.isArray(value)) {
       return value.some((_item) => option.value === _item.value);
     }
-
     return value.value === option.value;
   };
 

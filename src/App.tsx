@@ -29,9 +29,9 @@ function App() {
         placeholder="placeHolder"
         icon={searchSvg}
         title="Team Member"
-        onChange={onSelectHandlerSingle}
-        value={singleElement}
-        mode="single"
+        onChange={onSelectHandlerMultiple}
+        value={selectedElement}
+        mode="multiple"
         options={(options as APIResponse[]).map((item) => ({
           label: item.title,
           value: item.title,

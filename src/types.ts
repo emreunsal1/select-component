@@ -17,6 +17,7 @@ export type SelectInputProps = {
   value: SelectInputOption | Array<SelectInputOption>;
   icon: string;
   style?: React.CSSProperties;
+  optionRender?: (option: SelectInputOption) => React.ReactElement;
 };
 
 export type APIResponse = {

@@ -1,8 +1,15 @@
-import { useState, useMemo } from "react";
-import Chevron from "../assets/chevron-down.svg";
+import classnames from "classnames";
+import { useState, useMemo, useEffect } from "react";
 import Tag from "./tag";
 import OptionsList from "./optionsList";
+import Chevron from "../assets/chevron-down.svg";
 import { SelectInputOption, SelectInputProps } from "../types";
+
+const onClickOutside = (element, callback) => {
+  document.addEventListener("click", (e) => {
+    if (!element.contains(e.target)) callback();
+  });
+};
 
 function SelectInput({
   title,
@@ -11,12 +18,13 @@ function SelectInput({
   options,
   mode = "single",
   onChange,
+  optionRender: OptionRender,
   value,
   icon,
   style,
 }: SelectInputProps) {
   const [inputValue, setInputValue] = useState("");
-  const [isShowList, setIsShowList] = useState(false);
+  const [showList, setShowList] = useState(false);
 
   const filteredOptions = useMemo(() => {
     return options.filter((item) =>
@@ -28,6 +36,7 @@ function SelectInput({
 
   const onItemClickHandler = (data: SelectInputOption) => {
     if (mode === "single") {
+      setShowList(false);
       onChange(data);
     } else if (mode === "multiple") {
       const input = document.getElementById("input");
@@ -46,44 +55,31 @@ function SelectInput({
     }
   };
 
-  const inputWrapperOnClickHandler = () => {
-    // burada custom render kısmı koşulu eklenecek
-    // if (mode) {
-    //   const input = document.getElementById("input");
-    //   setIsShowList(true);
-    //   input?.focus();
-    // }
-  };
+  useEffect(() => {
+    const input = document.querySelector("#input");
+    if (input) {
+      if (showList) {
+        (input as any).focus();
+      }
+    }
+  }, [showList]);
 
-  // useEffect(() => {
-  //   if (document.getElementById("input")) {
-  //     const input = document.getElementById("input");
-  //     if (input) {
-  //       if (mode == "single") {
-  //         input.addEventListener("blur", () => {
-  //           setTimeout(() => {
-  //             setIsShowList(false);
-  //           }, 10);
-  //         });
-  //       }
-  //       input.addEventListener("focus", () => {
-  //         setIsShowList(true);
-  //       });
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    const inputbody = document.querySelector(".input-body");
+    onClickOutside(inputbody, () => {
+      setShowList(false);
+    });
+  }, []);
 
   return (
     <div className="select" style={style}>
       <div className="title">{title}</div>
       <div className="input-body">
         <div
-          className={
-            isShowList || (value as SelectInputOption[]).length
-              ? "input-container active"
-              : "input-container"
-          }
-          onClick={inputWrapperOnClickHandler}
+          onClick={() => setShowList(true)}
+          className={classnames("input-container", {
+            active: showList || (value as SelectInputOption[]).length,
+          })}
         >
           {icon && (
             <div className="icon">
@@ -102,15 +98,27 @@ function SelectInput({
             </div>
           )}
           <div className="input-wrapper">
-            {mode === "single" && (
+            {mode === "single" && !OptionRender && (
               <div className="single-input-wrapper">
                 <input
                   id="input"
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder={(value as SelectInputOption).label || placeholder}
+                  placeholder={
+                    (value as SelectInputOption).label || placeholder
+                  }
                 />
               </div>
             )}
+
+            {mode === "single" && OptionRender && (
+              <div className="single-input-wrapper">
+                <OptionRender
+                  label={(value as SelectInputOption).label}
+                  value={(value as SelectInputOption).value}
+                />
+              </div>
+            )}
+
             {mode === "multiple" && (
               <input
                 id="input"
@@ -121,18 +129,21 @@ function SelectInput({
             )}
           </div>
           <div
-            className={`show-icon ${isShowList && "active"}`}
-            onClick={() => setIsShowList(!isShowList)}
+            className={classnames("show-icon", {
+              active: showList,
+            })}
+            onClick={() => setShowList(!showList)}
           >
             <img id="opened-icon" src={Chevron} alt="dropdown" />
           </div>
         </div>
-          <OptionsList
-            value={value}
-            options={optionsShouldRender}
-            isVisible={isShowList}
-            onItemClickHandler={onItemClickHandler}
-          />
+        <OptionsList
+          value={value}
+          options={optionsShouldRender}
+          isVisible={showList}
+          optionRender={OptionRender}
+          onItemClickHandler={onItemClickHandler}
+        />
       </div>
       <div className="description">{description}</div>
     </div>
