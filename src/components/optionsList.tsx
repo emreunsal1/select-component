@@ -1,79 +1,77 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CheckIcon from "../assets/check.svg";
+import { SelectInputOption } from "../types";
 
-interface Option {
-  label: string;
-  value: string;
+interface Option extends SelectInputOption {
   isActive?: boolean;
 }
 
 interface OptionsListProps {
   options: Option[];
   isVisible: boolean;
-  value: Option;
-  onSelectHandler: (option: Option) => void;
+  value: Option | Option[];
+  onItemClickHandler: (option: Option) => void;
 }
 
 const OptionsList: React.FC<OptionsListProps> = ({
   options,
   isVisible,
   value,
-  mode,
-  onSelectHandler,
+  onItemClickHandler,
 }) => {
-  const [newOptions, setNewOptions] = useState(options);
-  useEffect(() => {
-    let mappingOptions = [];
-    if (mode == "single") {
-      mappingOptions = options.map((option) => {
-        option.isActive = false;
-        if (value.label == option.label) {
-          option.isActive = true;
-        }
-        return option;
-      });
-      setNewOptions(mappingOptions);
-      return;
-    }
-
-    mappingOptions = options.map((option) => {
-      if (value.some((item) => item.value === option.value)) {
-        option.isActive = true;
-        return option;
-      }
-      option.isActive = false;
-      return option;
-    });
-    setNewOptions(mappingOptions);
-  }, [value, options]);
-
   if (!isVisible) {
     return null;
   }
 
   const itemClickHandler = (option: Option) => {
-    delete option.isActive;
-    onSelectHandler(option);
+    onItemClickHandler(option);
   };
 
   return (
     <div className="options-list">
-      {newOptions &&
-        newOptions.map((option) => (
-          <div
-            className={option.isActive ? "option-item active" : "option-item"}
-            onClick={() => itemClickHandler(option)}
-            id={option.value}
-            key={option.value}
-          >
-            <div className="text">{option.label}</div>
-            {option.isActive && (
-              <div className="active-icon">
-                <img src={CheckIcon} alt="Check Icon" />
-              </div>
-            )}
-          </div>
-        ))}
+      {options.map((option) => (
+        <OptionListItem
+          value={value}
+          key={option.value}
+          option={option}
+          onClick={() => itemClickHandler(option)}
+        />
+      ))}
+    </div>
+  );
+};
+
+const OptionListItem = ({
+  option,
+  value,
+  onClick,
+}: {
+  value: Option | Option[];
+  option: Option;
+  onClick: (data: Option) => void;
+}) => {
+  const calculateIsActive = () => {
+    if (Array.isArray(value)) {
+      return value.some((_item) => option.value === _item.value);
+    }
+
+    return value.value === option.value;
+  };
+
+  const isActive = calculateIsActive();
+
+  return (
+    <div
+      className={isActive ? "option-item active" : "option-item"}
+      onClick={() => onClick(option)}
+      key={option.value}
+    >
+      <div className="text">{option.label}</div>
+      {isActive && (
+        <div className="active-icon">
+          <img src={CheckIcon} alt="Check Icon" />
+        </div>
+      )}
     </div>
   );
 };

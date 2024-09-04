@@ -3,10 +3,11 @@ import searchSvg from "./assets/search.svg";
 import { useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { APIResponse } from "./types";
 
 function App() {
-  const [selectedElement, setSelectedElement] = useState([]);
   const [singleElement, setSingleElement] = useState([]);
+  const [selectedElement, setSelectedElement] = useState([]);
 
   const onSelectHandlerMultiple = (selectedElements) => {
     setSelectedElement(selectedElements);
@@ -24,14 +25,14 @@ function App() {
   return (
     <div style={{ width: "40%" }}>
       <SelectInput
-        description={"This is a hint text help a user"}
-        placeholder={"placeHolder"}
+        description="This is a hint text help a user"
+        placeholder="placeHolder"
         icon={searchSvg}
-        title={"Team Member"}
-        onChange={onSelectHandlerMultiple}
-        value={selectedElement}
-        mode={"multiple"}
-        options={options.map((item) => ({
+        title="Team Member"
+        onChange={onSelectHandlerSingle}
+        value={singleElement}
+        mode="single"
+        options={(options as APIResponse[]).map((item) => ({
           label: item.title,
           value: item.title,
         }))}

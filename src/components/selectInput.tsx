@@ -1,7 +1,8 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Chevron from "../assets/chevron-down.svg";
 import Tag from "./tag";
 import OptionsList from "./optionsList";
+import { SelectInputOption, SelectInputProps } from "../types";
 
 function SelectInput({
   title,
@@ -13,7 +14,7 @@ function SelectInput({
   value,
   icon,
   style,
-}) {
+}: SelectInputProps) {
   const [inputValue, setInputValue] = useState("");
   const [isShowList, setIsShowList] = useState(false);
 
@@ -25,18 +26,22 @@ function SelectInput({
 
   const optionsShouldRender = inputValue.length ? filteredOptions : options;
 
-  const onSelectHandler = (data) => {
+  const onItemClickHandler = (data: SelectInputOption) => {
     if (mode === "single") {
       onChange(data);
     } else if (mode === "multiple") {
       const input = document.getElementById("input");
       input?.focus();
-      const isExistValue = value.some((item) => item.value === data.value);
+      const isExistValue = (value as SelectInputOption[]).some(
+        (item) => item.value === data.value
+      );
       if (isExistValue) {
-        const filteredValue = value.filter((item) => item.value !== data.value);
+        const filteredValue = (value as SelectInputOption[]).filter(
+          (item) => item.value !== data.value
+        );
         onChange(filteredValue);
       } else {
-        onChange([...value, data]);
+        onChange([...(value as SelectInputOption[]), data]);
       }
     }
   };
@@ -50,21 +55,23 @@ function SelectInput({
     // }
   };
 
-  useEffect(() => {
-    if (document.getElementById("input")) {
-      const input = document.getElementById("input");
-      if (mode == "single") {
-        input.addEventListener("blur", () => {
-          setTimeout(() => {
-            setIsShowList(false);
-          }, 10);
-        });
-      }
-      input.addEventListener("focus", () => {
-        setIsShowList(true);
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (document.getElementById("input")) {
+  //     const input = document.getElementById("input");
+  //     if (input) {
+  //       if (mode == "single") {
+  //         input.addEventListener("blur", () => {
+  //           setTimeout(() => {
+  //             setIsShowList(false);
+  //           }, 10);
+  //         });
+  //       }
+  //       input.addEventListener("focus", () => {
+  //         setIsShowList(true);
+  //       });
+  //     }
+  //   }
+  // }, []);
 
   return (
     <div className="select" style={style}>
@@ -72,7 +79,7 @@ function SelectInput({
       <div className="input-body">
         <div
           className={
-            isShowList || value.length
+            isShowList || (value as SelectInputOption[]).length
               ? "input-container active"
               : "input-container"
           }
@@ -83,10 +90,14 @@ function SelectInput({
               <img src={icon} alt="icon" />
             </div>
           )}
-          {mode === "multiple" && value.length > 0 && (
+          {mode === "multiple" && (value as SelectInputOption[]).length > 0 && (
             <div className="tags">
-              {value.map((item) => (
-                <Tag key={item.value} data={item} onClick={onSelectHandler} />
+              {(value as SelectInputOption[]).map((item) => (
+                <Tag
+                  key={item.value}
+                  data={item}
+                  onClick={onItemClickHandler}
+                />
               ))}
             </div>
           )}
@@ -96,7 +107,7 @@ function SelectInput({
                 <input
                   id="input"
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder={value?.label || placeholder}
+                  placeholder={(value as SelectInputOption).label || placeholder}
                 />
               </div>
             )}
@@ -116,15 +127,12 @@ function SelectInput({
             <img id="opened-icon" src={Chevron} alt="dropdown" />
           </div>
         </div>
-        {
           <OptionsList
             value={value}
-            mode={mode}
             options={optionsShouldRender}
             isVisible={isShowList}
-            onSelectHandler={onSelectHandler}
+            onItemClickHandler={onItemClickHandler}
           />
-        }
       </div>
       <div className="description">{description}</div>
     </div>
