@@ -4,7 +4,6 @@
   padding: 2px 4px;
   border-radius: 6px;
   align-items: center;
-  width: 200px;
   justify-content: space-between;
 
   cursor: pointer;
@@ -36,8 +35,8 @@
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+      width: 150px;
       line-height: 20px;
-      max-width: 175px;
     }
   }
   .back-button {

@@ -22,7 +22,7 @@ function App() {
         .then((res) => res.data),
   });
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "40%" }}>
       <SelectInput
         description={"This is a hint text help a user"}
         placeholder={"placeHolder"}

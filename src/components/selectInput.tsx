@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Chevron from "../assets/chevron-down.svg";
 import Tag from "./tag";
 import OptionsList from "./optionsList";
@@ -25,11 +25,12 @@ function SelectInput({
 
   const optionsShouldRender = inputValue.length ? filteredOptions : options;
 
-  const onChangeHandler = (data) => {
+  const onSelectHandler = (data) => {
     if (mode === "single") {
-      setIsShowList(false);
       onChange(data);
     } else if (mode === "multiple") {
+      const input = document.getElementById("input");
+      input?.focus();
       const isExistValue = value.some((item) => item.value === data.value);
       if (isExistValue) {
         const filteredValue = value.filter((item) => item.value !== data.value);
@@ -41,12 +42,29 @@ function SelectInput({
   };
 
   const inputWrapperOnClickHandler = () => {
-    if (mode == "multiple") {
-      const input = document.getElementById("input");
-      setIsShowList(true);
-      input?.focus();
-    }
+    // burada custom render kısmı koşulu eklenecek
+    // if (mode) {
+    //   const input = document.getElementById("input");
+    //   setIsShowList(true);
+    //   input?.focus();
+    // }
   };
+
+  useEffect(() => {
+    if (document.getElementById("input")) {
+      const input = document.getElementById("input");
+      if (mode == "single") {
+        input.addEventListener("blur", () => {
+          setTimeout(() => {
+            setIsShowList(false);
+          }, 10);
+        });
+      }
+      input.addEventListener("focus", () => {
+        setIsShowList(true);
+      });
+    }
+  }, []);
 
   return (
     <div className="select" style={style}>
@@ -68,7 +86,7 @@ function SelectInput({
           {mode === "multiple" && value.length > 0 && (
             <div className="tags">
               {value.map((item) => (
-                <Tag key={item.value} data={item} onClick={onChangeHandler} />
+                <Tag key={item.value} data={item} onClick={onSelectHandler} />
               ))}
             </div>
           )}
@@ -91,8 +109,11 @@ function SelectInput({
               />
             )}
           </div>
-          <div className="show-icon">
-            <img src={Chevron} alt="dropdown" />
+          <div
+            className={`show-icon ${isShowList && "active"}`}
+            onClick={() => setIsShowList(!isShowList)}
+          >
+            <img id="opened-icon" src={Chevron} alt="dropdown" />
           </div>
         </div>
         {
@@ -101,7 +122,7 @@ function SelectInput({
             mode={mode}
             options={optionsShouldRender}
             isVisible={isShowList}
-            onChangeHandler={onChangeHandler}
+            onSelectHandler={onSelectHandler}
           />
         }
       </div>

@@ -11,7 +11,7 @@ interface OptionsListProps {
   options: Option[];
   isVisible: boolean;
   value: Option;
-  onChangeHandler: (option: Option) => void;
+  onSelectHandler: (option: Option) => void;
 }
 
 const OptionsList: React.FC<OptionsListProps> = ({
@@ -19,7 +19,7 @@ const OptionsList: React.FC<OptionsListProps> = ({
   isVisible,
   value,
   mode,
-  onChangeHandler,
+  onSelectHandler,
 }) => {
   const [newOptions, setNewOptions] = useState(options);
   useEffect(() => {
@@ -53,7 +53,7 @@ const OptionsList: React.FC<OptionsListProps> = ({
 
   const itemClickHandler = (option: Option) => {
     delete option.isActive;
-    onChangeHandler(option);
+    onSelectHandler(option);
   };
 
   return (
