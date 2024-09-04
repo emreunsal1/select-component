@@ -16,6 +16,7 @@
       display: flex;
       position: relative;
       z-index: 3;
+      overflow: hidden;
 
       &.active {
         border: 1px solid $border-brand;
@@ -25,6 +26,7 @@
       .icon {
         margin-right: 8px;
         height: 20px;
+        min-width: 20px;
         img {
           width: 100%;
           height: 100%;
@@ -33,7 +35,6 @@
       .tags {
         display: flex;
         flex-wrap: wrap;
-        flex-grow: 1;
       }
       .input-wrapper {
         min-width: 100px;
@@ -55,12 +56,6 @@
             }
           }
         }
-      }
-      .tags:empty + .input-wrapper {
-        flex-grow: 1;
-      }
-      .tags:not(:empty) + .input-wrapper {
-        flex-shrink: 1;
       }
       .show-icon {
         margin-left: 8px;

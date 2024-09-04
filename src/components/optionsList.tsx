@@ -44,7 +44,6 @@ const OptionsList: React.FC<OptionsListProps> = ({
       option.isActive = false;
       return option;
     });
-    console.log("object :>> ", mappingOptions);
     setNewOptions(mappingOptions);
   }, [value, options]);
 

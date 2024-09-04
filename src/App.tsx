@@ -31,21 +31,11 @@ function App() {
         onChange={onSelectHandlerMultiple}
         value={selectedElement}
         mode={"multiple"}
-      >
-        {options.map((item) => (
-          <SelectInput.Option key={item.id} value={item.id} label={item.title}>
-            <div
-              className={`render-option`}
-              onClick={() => onSelectHandlerMultiple(item)}
-            >
-              <div className="option-image">
-                <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"></img>
-              </div>
-              <div className="option-text">{item.title}</div>
-            </div>
-          </SelectInput.Option>
-        ))}
-      </SelectInput>
+        options={options.map((item) => ({
+          label: item.title,
+          value: item.title,
+        }))}
+      ></SelectInput>
     </div>
   );
 }
