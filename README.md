@@ -1,50 +1,120 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# SelectInput React Component
 
-Currently, two official plugins are available:
+## Overview
+The SelectInput component is a highly customizable React dropdown select input. It supports both single and multiple selection modes and offers advanced features like custom option rendering and dynamic filtering.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Features
+- Selection Modes: Supports single and multiple selection.
+- Custom Rendering: Ability to provide a custom rendering function for options.
+- Dynamic Filtering: Filter options based on user input.
+- Unique IDs: Each instance of the component is assigned a unique ID to avoid conflicts.
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Installation
 
-- Configure the top-level `parserOptions` property like this:
+Install my-project with npm
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+  git clone https://github.com/emreunsal1/select-component.git
+  cd select-component
+
+```
+    
+## Usage/Examples
+
+```javascript
+import React, { useState } from "react";
+import SelectInput from "./path/to/SelectInput";
+import { SelectInputOption } from "./path/to/types";
+
+const options: SelectInputOption[] = [
+  { label: "Option 1", value: "option1" },
+  { label: "Option 2", value: "option2" },
+  { label: "Option 3", value: "option3" },
+];
+
+function App() {
+  const [selectedValue, setSelectedValue] = useState<SelectInputOption | SelectInputOption[] | null>(null);
+
+  const handleChange = (option: SelectInputOption | SelectInputOption[]) => {
+    setSelectedValue(option);
+  };
+
+  return (
+    <SelectInput
+      title="Select an Option"
+      description="Choose one or more options"
+      placeholder="Select..."
+      options={options}
+      mode="multiple" // or "single"
+      onChange={handleChange}
+      value={selectedValue}
+    />
+  );
+}
+
+export default App;
+
+```
+## Component Props
+- title (string): The title of the select input.
+- description (string): Additional description or information for the select input.
+- placeholder (string): Placeholder text for the input field.
+- options (SelectInputOption[]): Array of options to display in the dropdown.
+- mode (string): Selection mode, either "single" or "multiple".
+- onChange (function): Callback function to handle value changes.
+- optionRender (function): Optional custom rendering function for options.
+- value (SelectInputOption | SelectInputOption[]): Current selected value(s).
+- icon (string): Optional icon to display in the select input.
+- style (React.CSSProperties): Inline styles for the select input container.
+
+
+
+## Custom Option Rendering
+You can provide a custom rendering function for options using the optionRender prop. Here’s an example:
+
+```javascript
+<SelectInput
+  title="Custom Render Example"
+  options={options}
+  optionRender={() => (
+    <>
+      <div>Custom Rendered Option 1</div>
+      <div>Custom Rendered Option 2</div>
+    </>
+  )}
+/>
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Handling Option Clicks
+To handle clicks on options, use the onChange callback:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```javascript
+<SelectInput
+  title="Custom Render Example"
+  options={options}
+  optionRender={() => (
+    <>
+      <div>Custom Rendered Option 1</div>
+      <div>Custom Rendered Option 2</div>
+    </>
+  )}
+/>
 ```
+
+## Development
+### Running the Development Server
+To start the development server and see live changes:
+
+```javascript
+npm run build
+```
+
+### Running the Development Server
+To build the project for production deployment:
+
+```javascript
+npm run build
+```
+
