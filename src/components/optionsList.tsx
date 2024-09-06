@@ -10,7 +10,7 @@ interface OptionsListProps {
   options: Option[];
   isVisible: boolean;
   value: Option | Option[];
-  optionRender: SelectInputProps["optionRender"];
+  optionRender: SelectInputProps["optionRender"] | null;
   onItemClickHandler: (option: Option) => void;
 }
 
@@ -31,32 +31,26 @@ const OptionsList: React.FC<OptionsListProps> = ({
 
   if (OptionRender) {
     return (
-      <div className="options-list">
-        {options.map((option) => (
-          <div
-            className="option-list-custom-item"
-            onClick={() => onItemClickHandler(option)}
-          >
-            <OptionRender
-              label={option.label}
-              value={option.value}
-            ></OptionRender>
-          </div>
-        ))}
+      <div className="options-list-wrapper">
+        <div className="options-list">
+          <OptionRender></OptionRender>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="options-list">
-      {options.map((option) => (
-        <OptionListItem
-          value={value}
-          key={option.value}
-          option={option}
-          onClick={() => itemClickHandler(option)}
-        />
-      ))}
+    <div className="options-list-wrapper">
+      <div className="options-list">
+        {options.map((option) => (
+          <OptionListItem
+            value={value}
+            key={option.value}
+            option={option}
+            onClick={() => itemClickHandler(option)}
+          />
+        ))}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-.options-list {
+.options-list-wrapper {
   position: absolute;
   top: 100%;
   background-color: $bg-primary;
@@ -10,36 +10,38 @@
   overflow-y: scroll;
   padding: 5px 6px;
   padding-bottom: 0px;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-    background-color: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 99999px;
-    height: 156px;
-    background-color: $bg-quaterny;
-  }
-
-  .option-item {
-    height: 44px;
-    color: $text-primary;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 3px;
-    display: flex;
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .active-icon {
-      display: none;
+  .options-list {
+    height: 320px;
+    &::-webkit-scrollbar {
+      width: 8px;
+      background-color: transparent;
     }
-    &.active {
-      background-color: $bg-active;
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 99999px;
+      height: 156px;
+      background-color: $bg-quaterny;
+    }
+
+    .option-item {
+      height: 44px;
+      color: $text-primary;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       .active-icon {
-        display: block;
+        display: none;
+      }
+      &.active {
+        background-color: $bg-active;
+        .active-icon {
+          display: block;
+        }
       }
     }
   }

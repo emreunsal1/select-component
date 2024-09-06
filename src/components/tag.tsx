@@ -1,9 +1,8 @@
-import React from "react";
 import CloseIcon from "../assets/close.svg";
 
 export default function Tag({ data, onClick }) {
   return (
-    <div className="tag-wrapper">
+    <div className="tag-wrapper" onClick={(e) => e.stopPropagation()}>
       <div className="content">
         {data.image && (
           <div className="img-wrapper">

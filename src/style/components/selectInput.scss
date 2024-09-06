@@ -1,5 +1,8 @@
 .select {
   margin: 20px auto;
+  &.active {
+    margin-bottom: 320px;
+  }
   .title {
     margin-bottom: 6px;
     font-size: 14px;
@@ -35,9 +38,10 @@
       .tags {
         display: flex;
         flex-wrap: wrap;
+        max-width: 60%;
       }
       .input-wrapper {
-        min-width: 100px;
+        min-width: 30%;
         flex-grow: 1;
         input {
           width: 100%;
