@@ -1,14 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import SelectInput from "./components/selectInput";
 import searchSvg from "./assets/search.svg";
 import { useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import {
-  APIResponse,
-  ExampleData,
-  SelectInputOption,
-  SelectInputProps,
-} from "./types";
+import { APIResponse, ExampleData } from "./types";
 import CheckIcon from "./assets/check.svg";
 
 function App() {
@@ -17,7 +13,7 @@ function App() {
   const [multipleElement, setMultipleElement] = useState([]);
   const [multipleRenderElement, setMultipleRenderElement] = useState([]);
 
-  const { data: options = [], isLoading } = useQuery({
+  const { data: options = [] } = useQuery({
     queryKey: ["posts"],
     queryFn: () =>
       axios
@@ -93,7 +89,7 @@ function App() {
           placeholder="placeHolder"
           icon={searchSvg}
           title="Options render Single"
-          onChange={(data) => setSingleRenderElement(data)}
+          onChange={(data) => setSingleRenderElement(data as any)}
           value={singleRenderElement}
           mode="single"
           options={exampleData.map((item) => ({
@@ -105,9 +101,9 @@ function App() {
               <div
                 className="render-option"
                 key={option.id}
-                value={(option as ExampleData).id}
-                label={option.name}
-                image={option.avatar}
+                data-value={(option as ExampleData).id}
+                data-label={option.name}
+                data-image={option.avatar}
               >
                 <div className="option-content">
                   <div className="option-image">
@@ -129,7 +125,7 @@ function App() {
           placeholder="placeHolder"
           icon={searchSvg}
           title="Options render Multiple"
-          onChange={(data) => setMultipleRenderElement(data)}
+          onChange={(data) => setMultipleRenderElement(data as any)}
           value={multipleRenderElement}
           mode="multiple"
           options={exampleData.map((item) => ({
@@ -141,9 +137,9 @@ function App() {
               <div
                 className="render-option"
                 key={option.id}
-                value={(option as ExampleData).id}
-                label={option.name}
-                image={option.avatar}
+                data-value={(option as ExampleData).id}
+                data-label={option.name}
+                data-image={option.avatar}
               >
                 <div className="option-content">
                   <div className="option-image">
@@ -165,7 +161,7 @@ function App() {
           placeholder="placeHolder"
           icon={searchSvg}
           title="Options single"
-          onChange={(data) => setSingleElement(data)}
+          onChange={(data) => setSingleElement(data as any)}
           value={singleElement}
           mode="single"
           options={options.map((item: APIResponse) => ({
@@ -180,7 +176,7 @@ function App() {
           placeholder="placeHolder"
           icon={searchSvg}
           title="Options Multiple"
-          onChange={(data) => setMultipleElement(data)}
+          onChange={(data) => setMultipleElement(data as any)}
           value={multipleElement}
           mode="multiple"
           options={options.map((item: APIResponse) => ({

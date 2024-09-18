@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useMemo, useEffect, useId } from "react";
 import classnames from "classnames";
 import Tag from "./tag";
@@ -43,7 +44,7 @@ function SelectInput({
     if (mode === "single" && !OptionRender) {
       setShowList(false);
       onChange(data);
-    } else if (mode === "multiple") {
+    } else if (mode === "multiple" && !OptionRender) {
       const input = document.getElementById(inputId);
       input?.focus();
       const isExistValue = (value as SelectInputOption[]).some(
@@ -59,6 +60,20 @@ function SelectInput({
       }
     } else if (OptionRender && mode === "single") {
       onChange(data);
+    } else if (mode === "multiple" && OptionRender) {
+      const input = document.getElementById(inputId);
+      input?.focus();
+      const isExistValue = (value as SelectInputOption[]).some(
+        (item) => item["data-value"] === data.value
+      );
+      if (isExistValue) {
+        const filteredValue = (value as SelectInputOption[]).filter(
+          (item) => item["data-value"] !== data.value
+        );
+        onChange(filteredValue);
+      } else {
+        onChange([...(value as SelectInputOption[]), data]);
+      }
     }
   };
 
@@ -72,14 +87,14 @@ function SelectInput({
     if (OptionRender) {
       if (inputValue.length && mode === "multiple") {
         return OptionRender().map((item) => {
-          const label = (item.props as any).label.toLowerCase();
+          const label = (item.props as any)["data-label"].toLowerCase();
           const isMatch = label.includes(inputValue.toLowerCase());
 
           if (isMatch) {
             const isActive =
               (item.props as any).value === (value as SelectInputOption).value;
             return React.cloneElement(item, {
-              onClick: (event) => {
+              onClick: (event: { stopPropagation: () => void }) => {
                 handleOptionClick(item.props);
                 event.stopPropagation();
               },
@@ -91,9 +106,10 @@ function SelectInput({
       } else {
         return OptionRender().map((item) => {
           const isActive =
-            (item.props as any).value === (value as SelectInputOption).value;
+            (item.props as any)["data-value"] ===
+            (value as SelectInputOption).value;
           return React.cloneElement(item, {
-            onClick: (event) => {
+            onClick: (event: { stopPropagation: () => void }) => {
               handleOptionClick(item.props);
               event.stopPropagation();
             },
@@ -106,20 +122,23 @@ function SelectInput({
   };
 
   const renderSelectedElement = () => {
-    return OptionRender().map((item) => {
-      const isActive =
-        (item.props as any).value === (value as SelectInputOption).value;
-      if (isActive) {
-        return React.cloneElement(item, {
-          onClick: (event) => {
-            handleOptionClick(item.props);
-            event.stopPropagation();
-            setShowList(!showList);
-          },
-          className: classnames(item.props.className),
-        });
-      }
-    });
+    if (OptionRender) {
+      return (OptionRender() as React.ReactElement[]).map((item) => {
+        const isActive =
+          (item.props as any)["data-value"] ===
+          (value as SelectInputOption)["data-value"];
+        if (isActive) {
+          return React.cloneElement(item, {
+            onClick: (event: { stopPropagation: () => void }) => {
+              handleOptionClick(item.props);
+              event.stopPropagation();
+              setShowList(!showList);
+            },
+            className: classnames(item.props.className),
+          });
+        }
+      });
+    }
   };
 
   useEffect(() => {
@@ -164,17 +183,35 @@ function SelectInput({
               <img src={icon} alt="icon" />
             </div>
           )}
-          {mode === "multiple" && (value as SelectInputOption[]).length > 0 && (
-            <div className="tags">
-              {(value as SelectInputOption[]).map((item) => (
-                <Tag
-                  key={item.value}
-                  data={item}
-                  onClick={onItemClickHandler}
-                />
-              ))}
-            </div>
-          )}
+          {mode === "multiple" &&
+            (value as SelectInputOption[]).length > 0 &&
+            !OptionRender && (
+              <div className="tags">
+                {(value as SelectInputOption[]).map((item) => (
+                  <Tag
+                    key={item.value}
+                    data={item as any}
+                    onClick={onItemClickHandler as () => void}
+                  />
+                ))}
+              </div>
+            )}
+          {mode === "multiple" &&
+            (value as SelectInputOption[]).length > 0 &&
+            OptionRender && (
+              <div className="tags">
+                {(value as SelectInputOption[]).map((item) => (
+                  <Tag
+                    key={(item as any)["data-value"]}
+                    data={{
+                      label: item["data-label"] as string,
+                      image: item["data-image"] as string,
+                    }}
+                    onClick={onItemClickHandler as () => void}
+                  />
+                ))}
+              </div>
+            )}
           <div className="input-wrapper">
             {mode === "single" && !OptionRender && (
               <div className="single-input-wrapper">
@@ -226,7 +263,7 @@ function SelectInput({
           value={value}
           options={optionsShouldRender}
           isVisible={showList}
-          optionRender={OptionRender ? renderElement : null}
+          optionRender={OptionRender ? (renderElement as any) : null}
           onItemClickHandler={onItemClickHandler}
         />
       </div>
